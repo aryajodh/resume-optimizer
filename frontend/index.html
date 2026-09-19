@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Resume Optimizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
+        <h1 class="text-2xl font-bold mb-4">Resume & Job Description Optimizer</h1>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+                <label class="block font-medium mb-1">Paste Resume Text:</label>
+                <textarea id="resume" class="w-full h-48 p-2 border rounded" placeholder="Paste your resume..."></textarea>
+            </div>
+            <div>
+                <label class="block font-medium mb-1">Paste Job Description:</label>
+                <textarea id="job" class="w-full h-48 p-2 border rounded" placeholder="Paste job description..."></textarea>
+            </div>
+        </div>
+        <button onclick="optimize()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Optimize Resume</button>
+        
+        <div class="mt-6">
+            <h2 class="text-xl font-semibold mb-2">Results & Suggestions:</h2>
+            <div id="output" class="p-4 bg-gray-100 rounded min-h-[150px] whitespace-pre-wrap"></div>
+        </div>
+    </div>
+
+    <script>
+        async function optimize() {
+            const resume = document.getElementById('resume').value;
+            const job = document.getElementById('job').value;
+            const output = document.getElementById('output');
+            
+            output.innerText = "Analyzing and optimizing with Gemini...";
+
+            try {
+                const response = await fetch('http://localhost:8000/api/optimize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ resume_text: resume, job_description: job })
+                });
+                const data = await response.json();
+                output.innerText = data.result;
+            } catch (err) {
+                output.innerText = "Error connecting to backend.";
+            }
+        }
+    </script>
+</body>
+</html>
